@@ -1,4 +1,4 @@
-import {ethers} from 'hardhat';
+import {ethers, run} from 'hardhat';
 import type {MyERC721__factory} from '../types/typechain';
 import constants from '../constants';
 
@@ -18,6 +18,18 @@ export default async function main(): Promise<string> {
   await contract.deployed();
 
   console.log(`\tContract is deployed at ${contract.address}`);
+
+  await run(`verify:verify`, {
+    address: contract.address,
+    constructorArguments: [
+      constants.MyERC721.name,
+      constants.MyERC721.symbol,
+      constants.MyERC721.supply,
+      constants.MyERC721.baseURI
+    ],
+  });
+  console.log("Completed verify MyERC721");
+
   return contract.address;
 }
 
